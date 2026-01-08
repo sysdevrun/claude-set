@@ -1,0 +1,66 @@
+import { useGameState } from './hooks/useGameState';
+import { Board } from './components/Board/Board';
+import { ScoreDisplay } from './components/ScoreDisplay/ScoreDisplay';
+import './App.css';
+
+function App() {
+  const { board, selectedCards, setsFound, feedback, selectCard, gameOver } =
+    useGameState();
+
+  return (
+    <div className="app">
+      <svg width="0" height="0" style={{ position: 'absolute' }}>
+        <defs>
+          <pattern
+            id="stripes-red"
+            patternUnits="userSpaceOnUse"
+            width="6"
+            height="6"
+          >
+            <line x1="0" y1="0" x2="0" y2="6" stroke="#e74c3c" strokeWidth="3" />
+          </pattern>
+          <pattern
+            id="stripes-green"
+            patternUnits="userSpaceOnUse"
+            width="6"
+            height="6"
+          >
+            <line x1="0" y1="0" x2="0" y2="6" stroke="#27ae60" strokeWidth="3" />
+          </pattern>
+          <pattern
+            id="stripes-purple"
+            patternUnits="userSpaceOnUse"
+            width="6"
+            height="6"
+          >
+            <line x1="0" y1="0" x2="0" y2="6" stroke="#9b59b6" strokeWidth="3" />
+          </pattern>
+        </defs>
+      </svg>
+
+      <header className="header">
+        <h1 className="title">Set</h1>
+        <ScoreDisplay setsFound={setsFound} />
+      </header>
+
+      <main className="main">
+        {gameOver ? (
+          <div className="game-over">
+            <p>No more valid sets!</p>
+            <p>Final score: {setsFound} sets found</p>
+            <button onClick={() => window.location.reload()}>Play Again</button>
+          </div>
+        ) : (
+          <Board
+            cards={board}
+            selectedCards={selectedCards}
+            feedback={feedback}
+            onSelectCard={selectCard}
+          />
+        )}
+      </main>
+    </div>
+  );
+}
+
+export default App;

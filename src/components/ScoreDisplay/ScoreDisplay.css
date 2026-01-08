@@ -1,0 +1,19 @@
+.score-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.score-label {
+  color: #666;
+}
+
+.score-value {
+  color: #333;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
