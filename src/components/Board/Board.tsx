@@ -5,15 +5,23 @@ import './Board.css';
 interface BoardProps {
   cards: CardType[];
   selectedCards: CardType[];
+  suggestedCards: CardType[];
   feedback: Feedback;
   onSelectCard: (card: CardType) => void;
 }
 
-export function Board({ cards, selectedCards, feedback, onSelectCard }: BoardProps) {
+export function Board({
+  cards,
+  selectedCards,
+  suggestedCards,
+  feedback,
+  onSelectCard,
+}: BoardProps) {
   return (
     <div className="board">
       {cards.map((card) => {
         const isSelected = selectedCards.some((c) => c.id === card.id);
+        const isSuggested = suggestedCards.some((c) => c.id === card.id);
         const cardFeedback = isSelected ? feedback : null;
 
         return (
@@ -21,6 +29,7 @@ export function Board({ cards, selectedCards, feedback, onSelectCard }: BoardPro
             key={card.id}
             card={card}
             isSelected={isSelected}
+            isSuggested={isSuggested}
             feedback={cardFeedback}
             onSelect={onSelectCard}
           />

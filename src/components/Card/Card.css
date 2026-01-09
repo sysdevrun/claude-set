@@ -31,6 +31,22 @@
   box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.3);
 }
 
+.card.suggested {
+  border-color: #ffc107;
+  background-color: rgba(255, 193, 7, 0.1);
+  box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.3);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(255, 193, 7, 0.5);
+  }
+}
+
 .card.correct {
   border-color: #28a745;
   background-color: rgba(40, 167, 69, 0.15);
