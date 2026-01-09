@@ -17,6 +17,7 @@ export function useGameState() {
   const [setsFound, setSetsFound] = useState(0);
   const [feedback, setFeedback] = useState<Feedback>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [suggestedCards, setSuggestedCards] = useState<Card[]>([]);
 
   const hasValidSet = useMemo(() => findValidSet(board) !== null, [board]);
 
@@ -38,6 +39,11 @@ export function useGameState() {
   const selectCard = useCallback(
     (card: Card) => {
       if (isProcessing) return;
+
+      // Clear suggestions when user starts selecting cards
+      if (suggestedCards.length > 0) {
+        setSuggestedCards([]);
+      }
 
       const isSelected = selectedCards.some((c) => c.id === card.id);
 
@@ -75,8 +81,21 @@ export function useGameState() {
         }, 600);
       }
     },
-    [isProcessing, selectedCards, replaceCards]
+    [isProcessing, selectedCards, suggestedCards.length, replaceCards]
   );
+
+  const suggestSet = useCallback(() => {
+    if (isProcessing) return;
+
+    const validSet = findValidSet(board);
+    if (validSet) {
+      setSuggestedCards(validSet);
+      // Auto-clear suggestion after 3 seconds
+      setTimeout(() => {
+        setSuggestedCards([]);
+      }, 3000);
+    }
+  }, [board, isProcessing]);
 
   const cardsRemaining = deck.length;
   const gameOver = !hasValidSet && cardsRemaining === 0;
@@ -84,9 +103,11 @@ export function useGameState() {
   return {
     board,
     selectedCards,
+    suggestedCards,
     setsFound,
     feedback,
     selectCard,
+    suggestSet,
     cardsRemaining,
     hasValidSet,
     gameOver,

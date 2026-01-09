@@ -7,6 +7,7 @@ import './Card.css';
 interface CardProps {
   card: CardType;
   isSelected: boolean;
+  isSuggested: boolean;
   feedback: Feedback;
   onSelect: (card: CardType) => void;
 }
@@ -17,7 +18,7 @@ const shapeComponents = {
   squiggle: Squiggle,
 };
 
-export function Card({ card, isSelected, feedback, onSelect }: CardProps) {
+export function Card({ card, isSelected, isSuggested, feedback, onSelect }: CardProps) {
   const ShapeComponent = shapeComponents[card.shape];
 
   const shapes = Array.from({ length: card.number }, (_, i) => (
@@ -27,6 +28,7 @@ export function Card({ card, isSelected, feedback, onSelect }: CardProps) {
   const classNames = [
     'card',
     isSelected ? 'selected' : '',
+    isSuggested ? 'suggested' : '',
     feedback || '',
   ]
     .filter(Boolean)

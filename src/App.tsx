@@ -4,8 +4,16 @@ import { ScoreDisplay } from './components/ScoreDisplay/ScoreDisplay';
 import './App.css';
 
 function App() {
-  const { board, selectedCards, setsFound, feedback, selectCard, gameOver } =
-    useGameState();
+  const {
+    board,
+    selectedCards,
+    suggestedCards,
+    setsFound,
+    feedback,
+    selectCard,
+    suggestSet,
+    gameOver,
+  } = useGameState();
 
   return (
     <div className="app">
@@ -39,7 +47,9 @@ function App() {
       </svg>
 
       <header className="header">
-        <h1 className="title">Set</h1>
+        <h1 className="title" onDoubleClick={suggestSet} style={{ cursor: 'pointer' }}>
+          Set
+        </h1>
         <ScoreDisplay setsFound={setsFound} />
       </header>
 
@@ -54,6 +64,7 @@ function App() {
           <Board
             cards={board}
             selectedCards={selectedCards}
+            suggestedCards={suggestedCards}
             feedback={feedback}
             onSelectCard={selectCard}
           />
