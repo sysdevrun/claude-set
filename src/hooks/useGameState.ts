@@ -18,20 +18,28 @@ export function useGameState() {
   const [feedback, setFeedback] = useState<Feedback>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [suggestedCards, setSuggestedCards] = useState<Card[]>([]);
+  const [replacingCardIds, setReplacingCardIds] = useState<Set<string>>(new Set());
 
   const hasValidSet = useMemo(() => findValidSet(board) !== null, [board]);
 
   const replaceCards = useCallback((cardsToReplace: Card[]) => {
     setGameState((prev) => {
       const idsToReplace = new Set(cardsToReplace.map((c) => c.id));
-      const newBoard = prev.board.filter((c) => !idsToReplace.has(c.id));
-      const cardsNeeded = 12 - newBoard.length;
-      const replacements = prev.deck.slice(0, cardsNeeded);
-      const newDeck = prev.deck.slice(cardsNeeded);
+      const replacements = prev.deck.slice(0, cardsToReplace.length);
+      const newDeck = prev.deck.slice(cardsToReplace.length);
+
+      // Replace cards at their original positions
+      let replacementIndex = 0;
+      const newBoard = prev.board.map((card) => {
+        if (idsToReplace.has(card.id)) {
+          return replacements[replacementIndex++];
+        }
+        return card;
+      });
 
       return {
         deck: newDeck,
-        board: [...newBoard, ...replacements],
+        board: newBoard,
       };
     });
   }, []);
@@ -65,12 +73,23 @@ export function useGameState() {
         setFeedback('correct');
         setSetsFound((s) => s + 1);
 
+        // Start flip animation after showing correct feedback
+        setTimeout(() => {
+          setReplacingCardIds(new Set(triplet.map((c) => c.id)));
+        }, 300);
+
+        // Replace cards at the midpoint of flip (when cards are edge-on)
         setTimeout(() => {
           replaceCards(triplet);
+        }, 600);
+
+        // Clear everything after animation completes
+        setTimeout(() => {
+          setReplacingCardIds(new Set());
           setSelectedCards([]);
           setFeedback(null);
           setIsProcessing(false);
-        }, 600);
+        }, 900);
       } else {
         setFeedback('incorrect');
 
@@ -104,6 +123,7 @@ export function useGameState() {
     board,
     selectedCards,
     suggestedCards,
+    replacingCardIds,
     setsFound,
     feedback,
     selectCard,

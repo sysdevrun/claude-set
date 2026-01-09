@@ -59,6 +59,22 @@
   box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.3);
 }
 
+.card.flipping {
+  animation: flip 0.6s ease-in-out;
+}
+
+@keyframes flip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(90deg);
+  }
+  100% {
+    transform: rotateY(0deg);
+  }
+}
+
 .shapes-container {
   display: flex;
   flex-direction: column;

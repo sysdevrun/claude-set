@@ -6,6 +6,7 @@ interface BoardProps {
   cards: CardType[];
   selectedCards: CardType[];
   suggestedCards: CardType[];
+  replacingCardIds: Set<string>;
   feedback: Feedback;
   onSelectCard: (card: CardType) => void;
 }
@@ -14,6 +15,7 @@ export function Board({
   cards,
   selectedCards,
   suggestedCards,
+  replacingCardIds,
   feedback,
   onSelectCard,
 }: BoardProps) {
@@ -22,6 +24,7 @@ export function Board({
       {cards.map((card) => {
         const isSelected = selectedCards.some((c) => c.id === card.id);
         const isSuggested = suggestedCards.some((c) => c.id === card.id);
+        const isReplacing = replacingCardIds.has(card.id);
         const cardFeedback = isSelected ? feedback : null;
 
         return (
@@ -30,6 +33,7 @@ export function Board({
             card={card}
             isSelected={isSelected}
             isSuggested={isSuggested}
+            isReplacing={isReplacing}
             feedback={cardFeedback}
             onSelect={onSelectCard}
           />

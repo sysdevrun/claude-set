@@ -8,6 +8,7 @@ function App() {
     board,
     selectedCards,
     suggestedCards,
+    replacingCardIds,
     setsFound,
     feedback,
     selectCard,
@@ -65,6 +66,7 @@ function App() {
             cards={board}
             selectedCards={selectedCards}
             suggestedCards={suggestedCards}
+            replacingCardIds={replacingCardIds}
             feedback={feedback}
             onSelectCard={selectCard}
           />
