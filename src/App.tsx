@@ -16,6 +16,7 @@ function App() {
     cardsRemaining,
     gameOver,
     noSetWarning,
+    handleReplaceCard,
   } = useGameState();
 
   return (
@@ -65,7 +66,8 @@ function App() {
       <main className="main">
         {noSetWarning && (
           <div className="no-set-warning">
-            <p>No valid sets available! Replacing a card...</p>
+            <p>No valid sets available!</p>
+            <button onClick={handleReplaceCard}>Replace a Card</button>
           </div>
         )}
         {gameOver ? (

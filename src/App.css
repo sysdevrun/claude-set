@@ -75,10 +75,31 @@
 }
 
 .no-set-warning p {
-  margin: 0;
+  margin: 0 0 16px 0;
   font-size: 1.1rem;
   font-weight: 600;
   text-align: center;
+}
+
+.no-set-warning button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: #007bff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.no-set-warning button:hover {
+  background: #0056b3;
+}
+
+.no-set-warning button:active {
+  transform: scale(0.98);
 }
 
 @keyframes fadeIn {
