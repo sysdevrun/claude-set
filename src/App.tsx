@@ -17,6 +17,7 @@ function App() {
     gameOver,
     noSetWarning,
     handleReplaceCard,
+    availableSetsCount,
   } = useGameState();
 
   return (
@@ -59,6 +60,10 @@ function App() {
           <div className="cards-remaining">
             <span className="cards-remaining-label">Deck:</span>
             <span className="cards-remaining-count">{cardsRemaining}</span>
+          </div>
+          <div className="cards-remaining">
+            <span className="cards-remaining-label">Sets:</span>
+            <span className="cards-remaining-count">{availableSetsCount}</span>
           </div>
         </div>
       </header>
