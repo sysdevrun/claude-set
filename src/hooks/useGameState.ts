@@ -21,6 +21,7 @@ export function useGameState() {
   const [replacingCardIds, setReplacingCardIds] = useState<Set<string>>(new Set());
   const [noSetWarning, setNoSetWarning] = useState(false);
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
+  const [availableSets, setAvailableSets] = useState<[Card, Card, Card][]>([]);
 
   const hasValidSet = useMemo(() => findValidSet(board) !== null, [board]);
 
@@ -93,8 +94,10 @@ export function useGameState() {
     });
   }, []);
 
-  // Reset set index when board changes
+  // Compute available sets and reset index when board changes
   useEffect(() => {
+    const allSets = findAllValidSets(board);
+    setAvailableSets(allSets);
     setCurrentSetIndex(0);
   }, [board]);
 
@@ -187,22 +190,22 @@ export function useGameState() {
   const suggestSet = useCallback(() => {
     if (isProcessing) return;
 
-    const allValidSets = findAllValidSets(board);
-    if (allValidSets.length > 0) {
+    if (availableSets.length > 0) {
       // Cycle through sets sequentially on each double-click
-      const nextSet = allValidSets[currentSetIndex % allValidSets.length];
+      const nextSet = availableSets[currentSetIndex % availableSets.length];
       setSuggestedCards(nextSet);
       // Move to next set for next double-click
-      setCurrentSetIndex((prev) => (prev + 1) % allValidSets.length);
+      setCurrentSetIndex((prev) => (prev + 1) % availableSets.length);
       // Auto-clear suggestion after 3 seconds
       setTimeout(() => {
         setSuggestedCards([]);
       }, 3000);
     }
-  }, [board, isProcessing, currentSetIndex]);
+  }, [availableSets, isProcessing, currentSetIndex]);
 
   const cardsRemaining = deck.length;
   const gameOver = !hasValidSet && cardsRemaining === 0;
+  const availableSetsCount = availableSets.length;
 
   return {
     board,
@@ -218,5 +221,6 @@ export function useGameState() {
     gameOver,
     noSetWarning,
     handleReplaceCard,
+    availableSetsCount,
   };
 }
