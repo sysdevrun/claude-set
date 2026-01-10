@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import type { Card, Feedback } from '../types';
 import { createDeck, shuffleDeck } from '../utils/deck';
-import { isValidSet, findValidSet } from '../utils/validation';
+import { isValidSet, findValidSet, findAllValidSets } from '../utils/validation';
 
 function initializeGame() {
   const fullDeck = shuffleDeck(createDeck());
@@ -181,9 +181,12 @@ export function useGameState() {
   const suggestSet = useCallback(() => {
     if (isProcessing) return;
 
-    const validSet = findValidSet(board);
-    if (validSet) {
-      setSuggestedCards(validSet);
+    const allValidSets = findAllValidSets(board);
+    if (allValidSets.length > 0) {
+      // Pick a random set from all available sets
+      const randomIndex = Math.floor(Math.random() * allValidSets.length);
+      const randomSet = allValidSets[randomIndex];
+      setSuggestedCards(randomSet);
       // Auto-clear suggestion after 3 seconds
       setTimeout(() => {
         setSuggestedCards([]);
