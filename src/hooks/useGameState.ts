@@ -92,25 +92,32 @@ export function useGameState() {
     });
   }, []);
 
-  // Auto-replace card when no valid sets exist
+  // Show warning when no valid sets exist
   useEffect(() => {
-    // Don't interfere if already processing or we have valid sets
-    if (isProcessing || hasValidSet) return;
+    // Don't interfere if already processing
+    if (isProcessing) return;
 
-    // No valid sets and deck has cards - trigger replacement
+    // No valid sets and deck has cards - show warning
     if (!hasValidSet && deck.length > 0) {
       setNoSetWarning(true);
-      setIsProcessing(true);
-
-      const timer = setTimeout(() => {
-        setNoSetWarning(false);
-        replaceSingleCard();
-        setIsProcessing(false);
-      }, 1000);
-
-      return () => clearTimeout(timer);
+    } else {
+      setNoSetWarning(false);
     }
-  }, [hasValidSet, deck.length, isProcessing, replaceSingleCard]);
+  }, [hasValidSet, deck.length, isProcessing]);
+
+  // Manual card replacement function
+  const handleReplaceCard = useCallback(() => {
+    if (deck.length === 0) return;
+
+    setNoSetWarning(false);
+    setIsProcessing(true);
+
+    // Add visual delay for better UX
+    setTimeout(() => {
+      replaceSingleCard();
+      setIsProcessing(false);
+    }, 300);
+  }, [deck.length, replaceSingleCard]);
 
   const selectCard = useCallback(
     (card: Card) => {
@@ -200,5 +207,6 @@ export function useGameState() {
     hasValidSet,
     gameOver,
     noSetWarning,
+    handleReplaceCard,
   };
 }
