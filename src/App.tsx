@@ -15,6 +15,7 @@ function App() {
     suggestSet,
     cardsRemaining,
     gameOver,
+    noSetWarning,
   } = useGameState();
 
   return (
@@ -62,9 +63,15 @@ function App() {
       </header>
 
       <main className="main">
+        {noSetWarning && (
+          <div className="no-set-warning">
+            <p>No valid sets available! Replacing a card...</p>
+          </div>
+        )}
         {gameOver ? (
           <div className="game-over">
-            <p>No more valid sets!</p>
+            <p>Game Over!</p>
+            <p>No more valid sets and deck is empty.</p>
             <p>Final score: {setsFound} sets found</p>
             <button onClick={() => window.location.reload()}>Play Again</button>
           </div>

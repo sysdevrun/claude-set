@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import type { Card, Feedback } from '../types';
 import { createDeck, shuffleDeck } from '../utils/deck';
 import { isValidSet, findValidSet } from '../utils/validation';
@@ -19,6 +19,7 @@ export function useGameState() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [suggestedCards, setSuggestedCards] = useState<Card[]>([]);
   const [replacingCardIds, setReplacingCardIds] = useState<Set<string>>(new Set());
+  const [noSetWarning, setNoSetWarning] = useState(false);
 
   const hasValidSet = useMemo(() => findValidSet(board) !== null, [board]);
 
@@ -61,6 +62,55 @@ export function useGameState() {
       };
     });
   }, []);
+
+  const replaceSingleCard = useCallback(() => {
+    setGameState((prev) => {
+      // Only proceed if deck has cards
+      if (prev.deck.length === 0) return prev;
+
+      // Find non-empty cards on the board
+      const validBoardCards = prev.board.filter((card) => !card.isEmpty);
+      if (validBoardCards.length === 0) return prev;
+
+      // Pick a random card to replace
+      const randomIndex = Math.floor(Math.random() * validBoardCards.length);
+      const cardToReplace = validBoardCards[randomIndex];
+
+      // Get the replacement card from the deck
+      const replacementCard = prev.deck[0];
+      const newDeck = prev.deck.slice(1);
+
+      // Replace the card at its position
+      const newBoard = prev.board.map((card) =>
+        card.id === cardToReplace.id ? replacementCard : card
+      );
+
+      return {
+        deck: newDeck,
+        board: newBoard,
+      };
+    });
+  }, []);
+
+  // Auto-replace card when no valid sets exist
+  useEffect(() => {
+    // Don't interfere if already processing or we have valid sets
+    if (isProcessing || hasValidSet) return;
+
+    // No valid sets and deck has cards - trigger replacement
+    if (!hasValidSet && deck.length > 0) {
+      setNoSetWarning(true);
+      setIsProcessing(true);
+
+      const timer = setTimeout(() => {
+        setNoSetWarning(false);
+        replaceSingleCard();
+        setIsProcessing(false);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [hasValidSet, deck.length, isProcessing, replaceSingleCard]);
 
   const selectCard = useCallback(
     (card: Card) => {
@@ -149,5 +199,6 @@ export function useGameState() {
     cardsRemaining,
     hasValidSet,
     gameOver,
+    noSetWarning,
   };
 }
