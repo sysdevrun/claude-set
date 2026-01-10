@@ -13,6 +13,7 @@ function App() {
     feedback,
     selectCard,
     suggestSet,
+    cardsRemaining,
     gameOver,
   } = useGameState();
 
@@ -51,7 +52,13 @@ function App() {
         <h1 className="title" onDoubleClick={suggestSet} style={{ cursor: 'pointer' }}>
           Set
         </h1>
-        <ScoreDisplay setsFound={setsFound} />
+        <div className="header-info">
+          <ScoreDisplay setsFound={setsFound} />
+          <div className="cards-remaining">
+            <span className="cards-remaining-label">Deck:</span>
+            <span className="cards-remaining-count">{cardsRemaining}</span>
+          </div>
+        </div>
       </header>
 
       <main className="main">

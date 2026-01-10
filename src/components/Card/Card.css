@@ -63,6 +63,17 @@
   animation: flip 0.6s ease-in-out;
 }
 
+.card.empty-card {
+  background: white;
+  border-color: #f0f0f0;
+  cursor: default;
+  opacity: 0.5;
+}
+
+.card.empty-card:active {
+  transform: none;
+}
+
 @keyframes flip {
   0% {
     transform: rotateY(0deg);

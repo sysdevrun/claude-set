@@ -9,6 +9,7 @@ export interface Card {
   shape: CardShape;
   shading: CardShading;
   color: CardColor;
+  isEmpty?: boolean; // Flag for placeholder cards when deck is empty
 }
 
 export type Feedback = 'correct' | 'incorrect' | null;

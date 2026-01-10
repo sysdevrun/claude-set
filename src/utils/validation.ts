@@ -18,10 +18,13 @@ export function isValidSet(cards: [Card, Card, Card]): boolean {
 }
 
 export function findValidSet(board: Card[]): [Card, Card, Card] | null {
-  for (let i = 0; i < board.length - 2; i++) {
-    for (let j = i + 1; j < board.length - 1; j++) {
-      for (let k = j + 1; k < board.length; k++) {
-        const triplet: [Card, Card, Card] = [board[i], board[j], board[k]];
+  // Filter out empty placeholder cards
+  const validCards = board.filter((card) => !card.isEmpty);
+
+  for (let i = 0; i < validCards.length - 2; i++) {
+    for (let j = i + 1; j < validCards.length - 1; j++) {
+      for (let k = j + 1; k < validCards.length; k++) {
+        const triplet: [Card, Card, Card] = [validCards[i], validCards[j], validCards[k]];
         if (isValidSet(triplet)) {
           return triplet;
         }

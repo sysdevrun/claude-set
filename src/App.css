@@ -25,6 +25,32 @@
   color: #333;
 }
 
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cards-remaining {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.cards-remaining-label {
+  font-weight: 500;
+}
+
+.cards-remaining-count {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #007bff;
+  min-width: 20px;
+  text-align: center;
+}
+
 .main {
   flex: 1;
   display: flex;
