@@ -20,6 +20,7 @@ export function useGameState() {
   const [suggestedCards, setSuggestedCards] = useState<Card[]>([]);
   const [replacingCardIds, setReplacingCardIds] = useState<Set<string>>(new Set());
   const [noSetWarning, setNoSetWarning] = useState(false);
+  const [currentSetIndex, setCurrentSetIndex] = useState(0);
 
   const hasValidSet = useMemo(() => findValidSet(board) !== null, [board]);
 
@@ -91,6 +92,11 @@ export function useGameState() {
       };
     });
   }, []);
+
+  // Reset set index when board changes
+  useEffect(() => {
+    setCurrentSetIndex(0);
+  }, [board]);
 
   // Show warning when no valid sets exist
   useEffect(() => {
@@ -183,16 +189,17 @@ export function useGameState() {
 
     const allValidSets = findAllValidSets(board);
     if (allValidSets.length > 0) {
-      // Pick a random set from all available sets
-      const randomIndex = Math.floor(Math.random() * allValidSets.length);
-      const randomSet = allValidSets[randomIndex];
-      setSuggestedCards(randomSet);
+      // Cycle through sets sequentially on each double-click
+      const nextSet = allValidSets[currentSetIndex % allValidSets.length];
+      setSuggestedCards(nextSet);
+      // Move to next set for next double-click
+      setCurrentSetIndex((prev) => (prev + 1) % allValidSets.length);
       // Auto-clear suggestion after 3 seconds
       setTimeout(() => {
         setSuggestedCards([]);
       }, 3000);
     }
-  }, [board, isProcessing]);
+  }, [board, isProcessing, currentSetIndex]);
 
   const cardsRemaining = deck.length;
   const gameOver = !hasValidSet && cardsRemaining === 0;
