@@ -27,6 +27,15 @@ export function Card({
   feedback,
   onSelect,
 }: CardProps) {
+  // Render empty placeholder card
+  if (card.isEmpty) {
+    return (
+      <div className="card empty-card">
+        <div className="shapes-container"></div>
+      </div>
+    );
+  }
+
   const ShapeComponent = shapeComponents[card.shape];
 
   const shapes = Array.from({ length: card.number }, (_, i) => (

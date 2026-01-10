@@ -25,8 +25,26 @@ export function useGameState() {
   const replaceCards = useCallback((cardsToReplace: Card[]) => {
     setGameState((prev) => {
       const idsToReplace = new Set(cardsToReplace.map((c) => c.id));
-      const replacements = prev.deck.slice(0, cardsToReplace.length);
+      const cardsFromDeck = prev.deck.slice(0, cardsToReplace.length);
       const newDeck = prev.deck.slice(cardsToReplace.length);
+
+      // Create empty placeholder cards if deck doesn't have enough cards
+      const replacements: Card[] = [];
+      for (let i = 0; i < cardsToReplace.length; i++) {
+        if (i < cardsFromDeck.length) {
+          replacements.push(cardsFromDeck[i]);
+        } else {
+          // Create empty placeholder card
+          replacements.push({
+            id: `empty-${Date.now()}-${i}`,
+            number: 1,
+            shape: 'diamond',
+            shading: 'solid',
+            color: 'red',
+            isEmpty: true,
+          });
+        }
+      }
 
       // Replace cards at their original positions
       let replacementIndex = 0;
@@ -46,7 +64,7 @@ export function useGameState() {
 
   const selectCard = useCallback(
     (card: Card) => {
-      if (isProcessing) return;
+      if (isProcessing || card.isEmpty) return;
 
       // Clear suggestions when user starts selecting cards
       if (suggestedCards.length > 0) {
